@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButtonPollType
+from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButtonPollType
 
 
 async def start(message: types.Message) -> None:
@@ -10,4 +10,4 @@ async def start(message: types.Message) -> None:
     menu_bilder.row(types.KeyboardButton(
         text='Отправить голосование', request_poll=KeyboardButtonPollType()))
 
-    await message.answer('Привет', reply_markup=menu_bilder.as_markup())
+    await message.answer('Привет', reply_markup=menu_bilder.as_markup(resize_keyboard=True))
