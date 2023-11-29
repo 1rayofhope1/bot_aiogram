@@ -1,10 +1,11 @@
 import os
 import asyncio
 import logging
+from sqlalchemy.ext.asyncio import AsyncEngine
 from aiogram import Dispatcher, Bot
 from commands import register_user_commands, bot_commands
 from aiogram.types import BotCommand
-from db import BaseModel, create_async__engine, proceed_schemas, get_session_maker, User
+from db import BaseModel, create_async_engine, proceed_schemas, get_session_maker, User
 from sqlalchemy.engine import URL
 
 
@@ -20,12 +21,16 @@ async def main() -> None:
 
     register_user_commands(dp)
 
-    postgres_url = URL.create('postgresql+asyncpg')
+    postgres_url = URL.create('postgresql+asyncpg',
+                              username=os.getenv('db_user'),
+                              password=os.getenv('db_password'),
+                              port=os.getenv('db_port'),
+                              host=os.getenv('db_host'),
+                              database=os.getenv('db_name'))
 
-    async_engine = create_async__engine()
+    async_engine = create_async_engine(postgres_url)
     session_maker = get_session_maker(async_engine)
-    with session_maker() as session:
-        proceed_schemas(session, BaseModel.metadata)
+    await proceed_schemas(async_engine, BaseModel.metadata)
 
     await dp.start_polling(bot)
 
