@@ -35,7 +35,8 @@ async def main() -> None:
 
     async_engine = create_async_engine(postgres_url)
     session_maker = get_session_maker(async_engine)
-    await proceed_schemas(async_engine, BaseModel.metadata)
+    #Делегировано алембику
+    #await proceed_schemas(async_engine, BaseModel.metadata)
 
     await dp.start_polling(bot, session_maker=session_maker)
 
